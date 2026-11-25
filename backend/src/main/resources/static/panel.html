@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel del paleontólogo · DinoGlosario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <nav class="nav"></nav>
+
+  <main class="seccion" style="padding-top:130px">
+    <div class="contenedor">
+      <div class="seccion-cabecera">
+        <div class="revelar izq">
+          <span class="eyebrow">Panel del paleontólogo</span>
+          <h2 id="titulo">Registrar nuevo dinosaurio</h2>
+        </div>
+        <p class="revelar der">Los campos con <span class="dorado">*</span> son obligatorios. Todas las medidas se expresan en el sistema métrico.</p>
+      </div>
+
+      <form id="formDino" class="tarjeta revelar" novalidate>
+        <div class="alerta error" style="margin-bottom:18px"></div>
+
+        <h3 class="subtitulo-form">Identificación</h3>
+        <div class="grid-form" style="margin-top:16px">
+          <div class="campo">
+            <label for="nombre">Nombre común <span class="req">*</span></label>
+            <input id="nombre" name="nombre" maxlength="80" placeholder="Tiranosaurio">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="nombreCientifico">Nombre científico <span class="req">*</span></label>
+            <input id="nombreCientifico" name="nombreCientifico" maxlength="120" placeholder="Tyrannosaurus rex">
+            <span class="ayuda">Nomenclatura binomial: Género (mayúscula) + especie (minúscula).</span>
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="significadoNombre">Significado del nombre</label>
+            <input id="significadoNombre" name="significadoNombre" maxlength="200" placeholder="Rey de los lagartos tiranos">
+            <div class="error-msg"></div>
+          </div>
+          <div class="grid-form" style="gap:14px">
+            <div class="campo">
+              <label for="periodo">Periodo <span class="req">*</span></label>
+              <select id="periodo" name="periodo"><option value="">Selecciona…</option></select>
+              <div class="error-msg"></div>
+            </div>
+            <div class="campo">
+              <label for="dieta">Dieta <span class="req">*</span></label>
+              <select id="dieta" name="dieta"><option value="">Selecciona…</option></select>
+              <div class="error-msg"></div>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="grupo">Grupo anatómico</label>
+            <select id="grupo" name="grupo"><option value="">Sin especificar</option></select>
+            <span class="ayuda" id="grupoAyuda">Define la forma del modelo 3D y el sonido que se recrea.</span>
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="wikipediaTitulo">Artículo de Wikipedia</label>
+            <input id="wikipediaTitulo" name="wikipediaTitulo" maxlength="120" placeholder="Tyrannosaurus">
+            <span class="ayuda">Para traer fotos y resumen. Si lo dejas vacío se usa el género del nombre científico.</span>
+            <div class="error-msg"></div>
+          </div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Medidas y hallazgo</h3>
+        <div class="grid-3" style="margin-top:16px">
+          <div class="campo">
+            <label for="longitudMetros">Longitud (m)</label>
+            <input id="longitudMetros" name="longitudMetros" type="number" step="0.01" min="0.1" max="60">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="alturaMetros">Altura (m)</label>
+            <input id="alturaMetros" name="alturaMetros" type="number" step="0.01" min="0.1" max="25">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="pesoToneladas">Peso (t)</label>
+            <input id="pesoToneladas" name="pesoToneladas" type="number" step="0.001" min="0.001" max="100">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="regionDescubrimiento">Región del hallazgo</label>
+            <input id="regionDescubrimiento" name="regionDescubrimiento" maxlength="120" placeholder="Montana, Estados Unidos">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="anioDescubrimiento">Año de descubrimiento</label>
+            <input id="anioDescubrimiento" name="anioDescubrimiento" type="number" min="1676" step="1">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="descubridor">Descubridor</label>
+            <input id="descubridor" name="descubridor" maxlength="120" placeholder="Barnum Brown">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="velocidadKmh">Velocidad estimada (km/h)</label>
+            <input id="velocidadKmh" name="velocidadKmh" type="number" step="0.1" min="0.5" max="120">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo" style="grid-column:span 2">
+            <label for="habitat">Hábitat</label>
+            <input id="habitat" name="habitat" maxlength="200" placeholder="Llanuras costeras boscosas">
+            <div class="error-msg"></div>
+          </div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Descripción</h3>
+        <div class="campo" style="margin-top:16px">
+          <label for="descripcion">Descripción detallada <span class="req">*</span></label>
+          <textarea id="descripcion" name="descripcion" maxlength="4000" placeholder="Describe su anatomía, hábitat y comportamiento…"></textarea>
+          <span class="ayuda"><span id="contador">0</span> / 4000 caracteres (mínimo 30)</span>
+          <div class="error-msg"></div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Características</h3>
+        <div class="campo" data-campo="caracteristicas" style="margin-top:16px">
+          <span class="ayuda">Agrega cualquier rasgo: cresta, garras, plumaje, velocidad estimada, hábitat… (máx. 30)</span>
+          <div id="caracteristicas" style="margin-top:12px"></div>
+          <div class="error-msg"></div>
+          <div><button type="button" class="btn btn-sm" id="agregarCaracteristica" style="margin-top:12px">+ Agregar característica</button></div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Curiosidades</h3>
+        <div class="campo" style="margin-top:16px">
+          <label for="curiosidades">Datos sorprendentes (uno por línea, máx. 15)</label>
+          <textarea id="curiosidades" name="curiosidades" style="min-height:110px" placeholder="Su mordida era la más potente de un animal terrestre.&#10;Podía comer 200 kg de plantas al día."></textarea>
+          <div class="error-msg"></div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Modelo 3D</h3>
+        <div class="campo" style="margin-top:16px">
+          <label for="modelo3dUrl">Modelo 3D .glb / .gltf / .fbx / .obj (opcional)</label>
+          <input id="modelo3dUrl" name="modelo3dUrl" maxlength="600" placeholder="/modelos/tiranosaurio.glb  o  https://…/modelo.glb">
+          <span class="ayuda">Copia el archivo a la carpeta <code>static/modelos/</code> y escribe <code>/modelos/nombre.glb</code>, o pega una URL externa (debe permitir CORS).
+            Si lo dejas vacío se usa <code>/modelos/Género.glb</code> si existe (p. ej. <code>Tyrannosaurus.glb</code>) y, si no, un modelo generado automáticamente.
+            Usa solo modelos cuya licencia permita mostrarlos en una web.</span>
+          <div class="error-msg"></div>
+        </div>
+
+        <h3 class="subtitulo-form" style="margin-top:34px">Fotos de referencia</h3>
+        <div class="campo" data-campo="imagenes" style="margin-top:16px">
+          <label class="zona-subida" id="zonaSubida">
+            <input type="file" id="archivo" accept="image/jpeg,image/png,image/webp,image/gif" multiple hidden>
+            <strong>Arrastra imágenes aquí</strong> o haz clic para subirlas<br>
+            <span class="ayuda">JPG, PNG, WEBP o GIF · máx. 5 MB cada una · hasta 12</span>
+          </label>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <input id="urlImagen" type="url" placeholder="…o pega la URL de una imagen (https://…)">
+            <button type="button" class="btn btn-sm" id="agregarUrl">Añadir</button>
+          </div>
+          <span class="ayuda">Si no añades fotos, la ficha mostrará automáticamente imágenes de Wikipedia / Wikimedia Commons.</span>
+          <div class="previews" id="previews"></div>
+          <div class="error-msg"></div>
+        </div>
+
+        <div class="acciones-form">
+          <a href="/" class="btn" id="cancelar">Cancelar</a>
+          <button type="submit" class="btn btn-solido" id="guardar">Guardar dinosaurio</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="js/musica.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/panel.js"></script>
+  <script src="js/asistente.js"></script>
+</body>
+</html>

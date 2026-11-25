@@ -1,181 +1,271 @@
+<div align="center">
+
 # 🦕 DinoGlosario
 
-Glosario web de dinosaurios descubiertos. Los **paleontólogos** (administradores) registran, editan y eliminan
-dinosaurios con sus características y fotos de referencia; los **usuarios** (exploradores) consultan el glosario.
-Incluye a **Braqui**, un braquiosaurio de caricatura en la esquina inferior derecha que responde preguntas con
-inteligencia artificial y RAG.
+**Un glosario web de dinosaurios con un asistente de inteligencia artificial que aprende de lo que te interesa.**
 
+![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3-6DB33F?logo=springboot&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?logo=postgresql&logoColor=white)
+![OpenAI](https://img.shields.io/badge/OpenAI-gpt--5--mini-412991?logo=openai&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-3D-000000?logo=threedotjs&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-opcional-2496ED?logo=docker&logoColor=white)
+
+[¿Qué es?](#-qué-es) · [Funciones](#-qué-hace) · [Cómo arrancarlo](#-cómo-arrancarlo) · [Arquitectura](#-arquitectura) · [API](#-api-rest)
+
+</div>
+
+---
+
+## 📖 ¿Qué es?
+
+**DinoGlosario** es una aplicación web para consultar y gestionar un catálogo de dinosaurios descubiertos.
+
+- 🧑‍🔬 Los **paleontólogos** (administradores) registran, editan y eliminan dinosaurios con sus características y fotos.
+- 🧭 Los **exploradores** (usuarios) recorren el glosario, buscan, filtran y descubren nuevas especies.
+- 🦕 **Braqui**, un braquiosaurio de caricatura que vive en la esquina de la pantalla, responde preguntas usando
+  **IA + RAG** (recuperación de información) sobre los dinosaurios de la base de datos y una base de conocimiento propia.
+
+## ✨ ¿Qué hace?
+
+| | Función | Detalle |
+|---|---|---|
+| 🔎 | **Búsqueda y filtros** | Por nombre, periodo, dieta y grupo. 29 dinosaurios de ejemplo incluidos. |
+| 🤖 | **Asistente Braqui** | Responde en contexto según la página que estás viendo, recomienda dinosaurios como tarjetas dentro del chat y muestra sus fuentes. |
+| 🎯 | **Recomendaciones personalizadas** | «Elegidos para ti» y «Te puede interesar», calculados a partir de las fichas que abres, tus búsquedas y la conversación. Funciona sin cuenta y se puede borrar con *Olvidar mis intereses*. |
+| 🧊 | **Modelo 3D interactivo** | Generado con Three.js según el grupo anatómico (cuernos, placas, vela, cresta…), animado y con una persona de 1,75 m a escala. Admite modelos `.glb` propios. |
+| 🔊 | **Sonidos y música** | Rugidos y bramidos recreados con Web Audio según el tamaño, y música de fondo original generada en el navegador. |
+| 🖼️ | **Imágenes reales** | Fotos y resúmenes de Wikipedia / Wikimedia Commons (con autor y licencia) cuando no hay fotos propias. |
+| 🔐 | **Cuentas y roles** | Registro e inicio de sesión con JWT; los paleontólogos necesitan un código de acreditación. |
+| ✅ | **Validaciones dobles** | En el navegador (respuesta inmediata) y en el servidor (la fuente de verdad), con mensajes en español junto a cada campo. |
+
+## 🚀 Cómo arrancarlo
+
+Hay dos formas: **con Docker** (lo más rápido) o **en local** (para desarrollar).
+
+### Opción A · Con Docker 🐳
+
+Solo necesitas [Docker Desktop](https://www.docker.com/products/docker-desktop/). PostgreSQL ya viene incluido.
+
+```bash
+cp .env.example .env        # en Windows: copy .env.example .env
+# edita .env y pon tu OPENAI_API_KEY
+docker compose up --build
 ```
-┌──────────────────────┐   /api/**    ┌──────────────────────────┐   /chat   ┌───────────────────────────┐
-│ Frontend HTML/CSS/JS │ ───────────▶ │ Backend Spring Boot 3    │ ────────▶ │ Servicio RAG (Python)     │
-│ (servido por Spring) │              │ JWT · JPA · Validaciones │ ◀──────── │ FastAPI · BM25 · OpenAI  │
-└──────────────────────┘              └────────────┬─────────────┘  lee los  └───────────────────────────┘
-                                                   │               dinosaurios por la API
-                                            PostgreSQL (H2 opcional)
+
+Abre 👉 **http://localhost:8080**
+
+### Opción B · En local 💻
+
+#### Requisitos
+
+| Herramienta | Versión |
+|---|---|
+| Java (JDK) | 21 |
+| Maven | 3.9 o superior |
+| Python | 3.11 o superior |
+| PostgreSQL | 18 (probado) |
+
+#### 1️⃣ Base de datos (PostgreSQL)
+
+Ejecuta [`database/postgres/01_crear_base_datos.sql`](database/postgres/01_crear_base_datos.sql) conectado como
+`postgres` (con Navicat, pgAdmin o `psql`). Crea el usuario `dino` / `dino123` y la base `dinoglosario`.
+
+```bash
+psql -U postgres -f database/postgres/01_crear_base_datos.sql
 ```
 
-## Estructura
+> [!NOTE]
+> No hace falta crear las tablas: el backend las crea al arrancar por primera vez y carga los 29 dinosaurios
+> y las cuentas de demostración. En [`02_consultas_utiles.sql`](database/postgres/02_consultas_utiles.sql)
+> tienes consultas para explorarlas.
 
-```
-dinoglosario/
-├── backend/                        Spring Boot (Java 21, Maven)
-│   └── src/main/
-│       ├── java/com/paleo/glosario/
-│       │   ├── config/             Seguridad, recursos estáticos, datos de ejemplo
-│       │   ├── controller/         REST: auth, dinosaurios, catálogos, archivos, asistente
-│       │   ├── dto/                Peticiones/respuestas con validaciones (Jakarta Validation)
-│       │   ├── exception/          Manejo global de errores (respuestas JSON en español)
-│       │   ├── model/              Entidades JPA: Usuario, Dinosaurio, Característica, Imagen
-│       │   ├── repository/         Spring Data JPA
-│       │   ├── security/           JWT + filtro de autenticación
-│       │   └── service/            Lógica de negocio
-│       └── resources/
-│           ├── static/             Frontend: index, dinosaurio, acceso, panel + css/js
-│           ├── application.properties          (H2 por defecto)
-│           ├── application-postgres.properties (perfil por defecto)
-│           └── application-mysql.properties    (perfil MySQL)
-├── rag-service/                    Python (FastAPI)
-│   ├── conocimiento/*.md           Base de conocimiento del asistente (edítala libremente)
-│   ├── rag.py                      Indexado y recuperación BM25 (docs + dinosaurios de la BD)
-│   ├── llm.py                      Generación con la API de OpenAI
-│   └── main.py                     API: POST /chat, POST /reindex, GET /salud
-├── database/postgres/             Scripts SQL para Navicat
-└── docker-compose.yml              PostgreSQL + backend + asistente
-```
+<details>
+<summary>Paso a paso con Navicat</summary>
 
-## Cómo ejecutarlo (local)
+1. **Conexión → PostgreSQL**: host `localhost`, puerto `5432`, base `postgres`, usuario `postgres` y la
+   contraseña que pusiste al instalar PostgreSQL.
+2. Clic derecho en la base `postgres` → **Nueva consulta**, pega el contenido de `01_crear_base_datos.sql` y pulsa **Ejecutar**.
+3. (Opcional) Crea una segunda conexión con el usuario `dino` para ver la base `dinoglosario` (esquema `public`).
 
-**Requisitos:** Java 21, Maven 3.9+, Python 3.11+ y PostgreSQL (probado con PostgreSQL 18).
+</details>
 
-### 1. Base de datos PostgreSQL (con Navicat)
-
-1. En Navicat: **Conexión → PostgreSQL**. Host `localhost`, puerto `5432`, base inicial `postgres`,
-   usuario `postgres` y la contraseña que pusiste al instalar PostgreSQL.
-2. Abre la conexión, clic derecho en la base `postgres` → **Nueva consulta**, pega
-   [`database/postgres/01_crear_base_datos.sql`](database/postgres/01_crear_base_datos.sql) y pulsa **Ejecutar**.
-   Crea el usuario `dino` / `dino123` y la base `dinoglosario`.
-3. (Opcional) Crea en Navicat una segunda conexión con usuario `dino` para ver la base `dinoglosario`.
-
-Las **tablas no se crean a mano**: el backend (Hibernate) las crea al arrancar por primera vez y carga
-29 dinosaurios y dos cuentas de demostración. Después puedes explorarlas en Navicat (esquema `public`) y usar
-las consultas de [`database/postgres/02_consultas_utiles.sql`](database/postgres/02_consultas_utiles.sql).
-
-> ¿Otro usuario/contraseña? Usa las variables `DB_USER`, `DB_PASSWORD` y `DB_URL`.
-> ¿Sin PostgreSQL? `SPRING_PROFILES_ACTIVE=h2` usa una base H2 en archivo, sin instalar nada.
-
-### 2. Backend (puerto 8080)
+#### 2️⃣ Backend Spring Boot (puerto 8080)
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-| Rol          | Correo                     | Contraseña    |
-|--------------|----------------------------|---------------|
-| Paleontólogo | `paleo@dinoglosario.com`   | `Paleo2026`   |
-| Usuario      | `usuario@dinoglosario.com` | `Usuario2026` |
+#### 3️⃣ Asistente Braqui en Python (puerto 8000)
 
-Código de acreditación para registrar nuevos paleontólogos: `PALEO-2026` (configurable con `CODIGO_PALEONTOLOGO`).
-
-### 3. Asistente IA con OpenAI (puerto 8000)
+En otra terminal:
 
 ```bash
 cd rag-service
 python -m venv .venv
-.venv\Scripts\activate            # macOS/Linux: source .venv/bin/activate
+.venv\Scripts\activate             # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-copy .env.example .env             # macOS/Linux: cp .env.example .env
-# edita .env y pon tu OPENAI_API_KEY (https://platform.openai.com/api-keys)
-uvicorn main:app --port 8000 --reload
+copy .env.example .env              # macOS/Linux: cp .env.example .env
+# edita .env y pon tu OPENAI_API_KEY → https://platform.openai.com/api-keys
+uvicorn main:app --port 8000
 ```
 
-Abre **http://localhost:8080**.
+#### 4️⃣ ¡Listo!
 
-> Sin `OPENAI_API_KEY` el asistente funciona en **modo básico**: responde con el fragmento más relevante de la
-> base de conocimiento y recomienda según el perfil, pero sin redactar con IA. Si el servicio Python está apagado,
-> el backend responde con un mensaje amable y recomendaciones en lugar de fallar.
+Abre 👉 **http://localhost:8080** y entra con una de las cuentas de demostración:
 
-### Con Docker (PostgreSQL incluido)
+| Rol | Correo | Contraseña |
+|---|---|---|
+| 🧑‍🔬 Paleontólogo | `paleo@dinoglosario.com` | `Paleo2026` |
+| 🧭 Usuario | `usuario@dinoglosario.com` | `Usuario2026` |
 
-```bash
-cp .env.example .env    # pon tu OPENAI_API_KEY
-docker compose up --build
+Código para registrar nuevos paleontólogos: `PALEO-2026`.
+
+> [!TIP]
+> **¿Sin PostgreSQL?** Arranca el backend con `SPRING_PROFILES_ACTIVE=h2` y usará una base H2 en archivo,
+> sin instalar nada. También hay un perfil `mysql`.
+
+> [!IMPORTANT]
+> **Braqui sin IA:** si no hay `OPENAI_API_KEY`, o la cuenta de OpenAI no tiene saldo, Braqui funciona en
+> **modo básico**: responde con el fragmento más relevante de la base de conocimiento, pero sin redactar con IA.
+> Si el servicio Python está apagado, el backend responde con un mensaje amable en lugar de fallar.
+
+> [!CAUTION]
+> Pon tu clave de OpenAI solo en `.env`, que está en `.gitignore`. **Nunca** la escribas en `.env.example`,
+> porque ese archivo sí se sube al repositorio.
+
+### ⚙️ Variables de configuración
+
+| Variable | Para qué sirve | Valor por defecto |
+|---|---|---|
+| `DB_URL` / `DB_USER` / `DB_PASSWORD` | Conexión a la base de datos | `jdbc:postgresql://localhost:5432/dinoglosario` · `dino` · `dino123` |
+| `SPRING_PROFILES_ACTIVE` | Base de datos a usar: `postgres`, `h2` o `mysql` | `postgres` |
+| `JWT_SECRET` | Secreto para firmar los tokens (mínimo 32 caracteres) | uno de ejemplo, **cámbialo en producción** |
+| `CODIGO_PALEONTOLOGO` | Código de acreditación de paleontólogos | `PALEO-2026` |
+| `ASISTENTE_URL` | Dirección del servicio de Braqui | `http://localhost:8000` |
+| `OPENAI_API_KEY` | Clave de OpenAI | vacía → modo básico |
+| `OPENAI_MODEL` | Modelo de OpenAI | `gpt-5-mini` |
+| `OPENAI_MAX_TOKENS` | Máximo de tokens por respuesta | `12000` |
+| `REINDEX_SEGUNDOS` | Cada cuántos segundos Braqui relee los dinosaurios | `60` |
+
+## 🏗️ Arquitectura
+
+```mermaid
+flowchart LR
+    U([🧭 Navegador]) -->|HTML · CSS · JS| B
+    subgraph B [Backend · Spring Boot 3 · :8080]
+        direction TB
+        F[Frontend estático]
+        API[API REST<br/>JWT · JPA · Validaciones]
+    end
+    API <-->|SQL| DB[(🐘 PostgreSQL)]
+    API -->|POST /chat| R[🦕 Braqui · FastAPI · :8000]
+    R -->|lee dinosaurios| API
+    R -->|genera respuesta| O[OpenAI]
 ```
 
-## Experiencia inmersiva
+<details>
+<summary>📁 Estructura del proyecto</summary>
 
-- **Braqui personalizado:** el glosario aprende de lo que haces (fichas que abres, búsquedas, filtros, sonidos,
-  modelos 3D y conversación). Braqui recibe ese perfil y la página que estás viendo, responde en contexto,
-  recomienda dinosaurios como **tarjetas dentro del chat** y la IA (OpenAI) detecta y guarda tus intereses
-  (salida estructurada JSON). Funciona sin cuenta (identificador anónimo del navegador) y se puede borrar con
-  **Olvidar mis intereses**.
-- **Recomendaciones:** «Elegidos para ti» en la portada y «Te puede interesar» en cada ficha
-  (afinidad por periodo, dieta, grupo y términos buscados, con más peso a lo reciente).
-- **Modelo 3D interactivo** (Three.js): generado según el grupo anatómico, con rasgos por género (gola y cuernos,
-  placas, vela, cresta tubular, mazo…), animado, con una persona de 1,75 m a escala. Admite modelos `.glb` propios.
-- **Sonidos recreados** con Web Audio según el grupo y el tamaño (rugidos, chillidos, bramidos, trompeta…).
-- **Música de fondo** orquestal suave y original, generada en el navegador (botón **Música**). Para usar una pista
-  propia con licencia, guárdala como `backend/src/main/resources/static/audio/fondo.mp3`.
-- **Imágenes y resúmenes reales** de Wikipedia / Wikimedia Commons (con autor y licencia) cuando no hay fotos propias.
-- **Catálogo ampliado:** 29 dinosaurios con grupo, hábitat, velocidad estimada y curiosidades.
+```
+dinoglosario/
+├── backend/                         Spring Boot (Java 21, Maven)
+│   └── src/main/
+│       ├── java/com/paleo/glosario/
+│       │   ├── config/              Seguridad, recursos estáticos, datos de ejemplo
+│       │   ├── controller/          REST: auth, dinosaurios, catálogos, archivos, asistente
+│       │   ├── dto/                 Peticiones y respuestas con validaciones
+│       │   ├── exception/           Errores en JSON y en español
+│       │   ├── model/               Entidades JPA: Usuario, Dinosaurio, Característica, Imagen
+│       │   ├── repository/          Spring Data JPA
+│       │   ├── security/            JWT y filtro de autenticación
+│       │   └── service/             Lógica de negocio
+│       └── resources/
+│           ├── static/              Frontend: index, dinosaurio, acceso, panel + css/js
+│           └── application*.properties   Perfiles: postgres (por defecto), h2, mysql
+├── rag-service/                     Asistente Braqui (Python, FastAPI)
+│   ├── conocimiento/*.md            Base de conocimiento (edítala libremente)
+│   ├── rag.py                       Indexado y búsqueda BM25
+│   ├── llm.py                       Generación con OpenAI
+│   ├── acciones.py                  Acciones que Braqui puede proponer en la página
+│   └── main.py                      API: POST /chat, POST /reindex, GET /salud
+├── database/postgres/               Scripts SQL
+└── docker-compose.yml               PostgreSQL + backend + asistente
+```
 
-## API REST
+</details>
 
-| Método | Ruta                          | Acceso        | Descripción |
-|--------|-------------------------------|---------------|-------------|
-| POST   | `/api/auth/registro`          | Público       | Crear cuenta (USUARIO o PALEONTOLOGO con código) |
-| POST   | `/api/auth/login`             | Público       | Devuelve `{ token, usuario }` |
-| GET    | `/api/auth/me`                | Autenticado   | Datos del usuario actual |
-| GET    | `/api/dinosaurios?q=&periodo=&dieta=&grupo=` | Público | Listado con búsqueda y filtros |
-| GET    | `/api/dinosaurios/{id}`       | Público       | Ficha completa |
-| POST   | `/api/dinosaurios`            | Paleontólogo  | Crear |
-| PUT    | `/api/dinosaurios/{id}`       | Paleontólogo  | Editar |
-| DELETE | `/api/dinosaurios/{id}`       | Paleontólogo  | Eliminar |
-| POST   | `/api/archivos/imagen`        | Paleontólogo  | Subir foto (multipart `archivo`) → `{ url }` |
-| GET    | `/api/catalogos/periodos` · `/dietas` · `/grupos` | Público | Valores para los selects |
-| POST   | `/api/asistente/chat`         | Público       | `{ mensaje, historial, contexto }` → `{ respuesta, fuentes, recomendaciones }` |
-| POST   | `/api/actividad`              | Público       | Registra `{ tipo, dinosaurioId, valor }` (VISTA, BUSQUEDA, FILTRO, SONIDO, MODELO3D…) |
-| GET    | `/api/recomendaciones?excluir=&limite=` | Público | Perfil de intereses + dinosaurios recomendados |
-| DELETE | `/api/actividad`              | Público       | Olvidar los intereses de este usuario/navegador |
+### 🦕 Cómo piensa Braqui (RAG)
 
-Autenticación: cabecera `Authorization: Bearer <token>`. Los errores llegan como
-`{ estado, error, mensaje, campos: { campo: "mensaje" } }` y el frontend los muestra junto a cada campo.
+1. **Indexa** los archivos `rag-service/conocimiento/*.md` (por secciones `##`) y todos los dinosaurios de la base
+   de datos. Se refresca cada 60 s, o al instante con `POST /reindex`.
+2. **Recupera** los 5 fragmentos más relevantes con BM25, con sinónimos y normalización del español.
+3. **Genera** la respuesta con OpenAI y muestra las fuentes debajo de cada respuesta.
 
-## Validaciones
+Para enseñarle algo nuevo basta con añadir o editar un `.md` en `rag-service/conocimiento/` y reiniciar el servicio.
 
-Se validan en el **cliente** (respuesta inmediata) y de nuevo en el **servidor** (la fuente de verdad):
+## 🔌 API REST
+
+<details>
+<summary>Ver todos los endpoints</summary>
+
+| Método | Ruta | Acceso | Descripción |
+|---|---|---|---|
+| `POST` | `/api/auth/registro` | Público | Crear cuenta (USUARIO, o PALEONTOLOGO con código) |
+| `POST` | `/api/auth/login` | Público | Devuelve `{ token, usuario }` |
+| `GET` | `/api/auth/me` | Autenticado | Datos del usuario actual |
+| `GET` | `/api/dinosaurios?q=&periodo=&dieta=&grupo=` | Público | Listado con búsqueda y filtros |
+| `GET` | `/api/dinosaurios/{id}` | Público | Ficha completa |
+| `POST` | `/api/dinosaurios` | Paleontólogo | Crear |
+| `PUT` | `/api/dinosaurios/{id}` | Paleontólogo | Editar |
+| `DELETE` | `/api/dinosaurios/{id}` | Paleontólogo | Eliminar |
+| `POST` | `/api/archivos/imagen` | Paleontólogo | Subir foto (multipart `archivo`) → `{ url }` |
+| `GET` | `/api/catalogos/periodos` · `/dietas` · `/grupos` | Público | Valores para los selects |
+| `POST` | `/api/asistente/chat` | Público | `{ mensaje, historial, contexto }` → `{ respuesta, fuentes, recomendaciones }` |
+| `POST` | `/api/actividad` | Público | Registra `{ tipo, dinosaurioId, valor }` (VISTA, BUSQUEDA, FILTRO, SONIDO, MODELO3D…) |
+| `GET` | `/api/recomendaciones?excluir=&limite=` | Público | Perfil de intereses + dinosaurios recomendados |
+| `DELETE` | `/api/actividad` | Público | Olvidar los intereses de este usuario o navegador |
+
+Autenticación con la cabecera `Authorization: Bearer <token>`. Los errores llegan como
+`{ estado, error, mensaje, campos: { campo: "mensaje" } }`.
+
+</details>
+
+## 🛡️ Validaciones y seguridad
+
+<details>
+<summary>Ver el detalle</summary>
 
 - **Registro:** nombre solo con letras (2–80), correo válido y único, contraseña de 8–64 caracteres con
-  mayúscula, minúscula y número, confirmación de contraseña; los paleontólogos también necesitan institución,
-  especialidad y un código de acreditación válido.
-- **Dinosaurio:** nombre único (2–80); nombre científico en nomenclatura binomial (`Tyrannosaurus rex`);
-  periodo y dieta obligatorios; longitud 0.1–60 m, altura 0.1–25 m, peso 0.001–100 t; año entre 1676 y el
-  actual; altura coherente con la longitud; descripción de 30–4000 caracteres; hasta 30 características sin
-  nombres repetidos; hasta 12 imágenes con URL http(s) o subida al servidor.
-- **Subida de imágenes:** solo JPG/PNG/WEBP/GIF de máximo 5 MB, comprobando también la firma binaria del
-  archivo (no solo la extensión), con nombre aleatorio (UUID).
-- **Seguridad:** contraseñas con BCrypt, JWT con expiración (8 h), rutas de escritura protegidas por rol,
-  todo el texto se escapa antes de insertarlo en el HTML (protección XSS).
+  mayúscula, minúscula y número, y confirmación. Los paleontólogos también indican institución, especialidad
+  y un código de acreditación válido.
+- **Dinosaurio:** nombre único (2–80); nombre científico binomial (`Tyrannosaurus rex`); periodo y dieta
+  obligatorios; longitud 0,1–60 m, altura 0,1–25 m, peso 0,001–100 t; año entre 1676 y el actual; altura
+  coherente con la longitud; descripción de 30–4000 caracteres; hasta 30 características sin repetir y hasta 12 imágenes.
+- **Imágenes:** solo JPG, PNG, WEBP o GIF de máximo 5 MB, comprobando la firma binaria del archivo (no solo la
+  extensión) y guardándolas con un nombre aleatorio (UUID).
+- **Seguridad:** contraseñas con BCrypt, JWT que caduca a las 8 h, rutas de escritura protegidas por rol y todo
+  el texto escapado antes de insertarlo en el HTML (protección XSS).
 
-## El asistente Braqui (RAG)
+</details>
 
-1. **Indexa** `rag-service/conocimiento/*.md` (troceados por secciones `##`) y todos los dinosaurios de la base
-   de datos (se refresca cada 60 s, o al instante con `POST /reindex`).
-2. **Recupera** los 5 fragmentos más relevantes con BM25, con sinónimos y normalización del español.
-3. **Genera** la respuesta con OpenAI (`gpt-5-mini` por defecto, cambiable con `OPENAI_MODEL`), con un máximo de
-   12 000 tokens por respuesta (`OPENAI_MAX_TOKENS`), y muestra las fuentes bajo cada respuesta.
-
-Para enseñarle cosas nuevas basta con añadir o editar archivos `.md` en `rag-service/conocimiento/` y reiniciar
-el servicio.
-
-## Pruebas
+## 🧪 Pruebas
 
 ```bash
-cd backend && mvn test
+cd backend
+mvn test
 ```
 
-10 pruebas de integración cubren el listado y los filtros, las validaciones de registro y del dinosaurio,
-el código de acreditación, el login incorrecto, los permisos por rol (401/403), el CRUD completo y el
-asistente con el servicio de IA apagado, el aprendizaje de intereses y las recomendaciones, y el catálogo ampliado.
-#   A s i s t e n t - A I - w e b - p a g e  
- 
+Hay 10 pruebas de integración. Cubren los filtros, las validaciones, el código de acreditación, los permisos
+por rol (401/403), el CRUD completo, el asistente con el servicio de IA apagado y las recomendaciones.
+
+---
+
+<div align="center">
+
+Hecho con 🦴 y mucha curiosidad paleontológica.
+
+</div>

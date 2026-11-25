@@ -1,0 +1,48 @@
+# Levanta todo: PostgreSQL + backend Spring Boot + asistente Python
+#   1. Crea un archivo .env junto a este (ver .env.example) con tu OPENAI_API_KEY
+#   2. docker compose up --build
+#   3. Abre http://localhost:8080
+# (No se publica el puerto 5432 para no chocar con un PostgreSQL instalado en tu equipo.)
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: dinoglosario
+      POSTGRES_USER: dino
+      POSTGRES_PASSWORD: dino123
+    volumes:
+      - pg-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dino -d dinoglosario"]
+      interval: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: postgres
+      DB_URL: jdbc:postgresql://postgres:5432/dinoglosario
+      DB_USER: dino
+      DB_PASSWORD: dino123
+      ASISTENTE_URL: http://asistente:8000
+      JWT_SECRET: ${JWT_SECRET:-cambia-este-secreto-super-largo-para-dinoglosario-2026}
+      CODIGO_PALEONTOLOGO: ${CODIGO_PALEONTOLOGO:-PALEO-2026}
+    volumes:
+      - uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  asistente:
+    build: ./rag-service
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5-mini}
+      OPENAI_MAX_TOKENS: ${OPENAI_MAX_TOKENS:-12000}
+      BACKEND_URL: http://backend:8080
+
+volumes:
+  pg-data:
+  uploads:

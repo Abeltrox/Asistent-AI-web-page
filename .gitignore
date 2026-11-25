@@ -1,0 +1,9 @@
+.env
+backend/target/
+backend/data/
+backend/uploads/
+rag-service/.venv/
+rag-service/__pycache__/
+*.log
+.idea/
+.vscode/

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceder · DinoGlosario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <nav class="nav"></nav>
+
+  <main class="acceso">
+    <div class="contenedor" style="display:grid;place-items:center">
+      <div class="tarjeta revelar zoom">
+        <div style="text-align:center;margin-bottom:24px">
+          <span class="eyebrow">Bienvenido</span>
+          <h2 style="margin-top:.3em">Entra al <span class="texto-gradiente">archivo</span></h2>
+        </div>
+
+        <div class="pestanas" data-activa="login">
+          <span class="indicador"></span>
+          <button type="button" class="activa" data-tab="login">Iniciar sesión</button>
+          <button type="button" data-tab="registro">Registrarse</button>
+        </div>
+
+        <!-- LOGIN -->
+        <form class="panel-form activo" id="formLogin" novalidate>
+          <div class="alerta error"></div>
+          <div class="campo">
+            <label for="loginEmail">Correo <span class="req">*</span></label>
+            <input id="loginEmail" name="email" type="email" autocomplete="email" placeholder="tu@correo.com">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="loginPassword">Contraseña <span class="req">*</span></label>
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" placeholder="••••••••">
+            <div class="error-msg"></div>
+          </div>
+          <button class="btn btn-solido" type="submit">Iniciar sesión</button>
+          <p class="demo">Demo paleontólogo: <code>paleo@dinoglosario.com</code> / <code>Paleo2026</code><br>
+            Demo usuario: <code>usuario@dinoglosario.com</code> / <code>Usuario2026</code></p>
+        </form>
+
+        <!-- REGISTRO -->
+        <form class="panel-form" id="formRegistro" novalidate>
+          <div class="alerta error"></div>
+          <div class="campo" data-campo="rol">
+            <label>Tipo de cuenta <span class="req">*</span></label>
+            <div class="selector-rol">
+              <label><input type="radio" name="rol" value="USUARIO" checked>🔎 Explorador
+                <small>Consulta el glosario, descripciones y fotos.</small></label>
+              <label><input type="radio" name="rol" value="PALEONTOLOGO">🦴 Paleontólogo
+                <small>Registra y edita dinosaurios (requiere acreditación).</small></label>
+            </div>
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="regNombre">Nombre completo <span class="req">*</span></label>
+            <input id="regNombre" name="nombre" autocomplete="name" maxlength="80" placeholder="Mary Anning">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="regEmail">Correo <span class="req">*</span></label>
+            <input id="regEmail" name="email" type="email" autocomplete="email" maxlength="120" placeholder="tu@correo.com">
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="regPassword">Contraseña <span class="req">*</span></label>
+            <input id="regPassword" name="password" type="password" autocomplete="new-password" maxlength="64">
+            <span class="ayuda">Mínimo 8 caracteres, con mayúscula, minúscula y número.</span>
+            <div class="error-msg"></div>
+          </div>
+          <div class="campo">
+            <label for="regPassword2">Confirmar contraseña <span class="req">*</span></label>
+            <input id="regPassword2" name="password2" type="password" autocomplete="new-password" maxlength="64">
+            <div class="error-msg"></div>
+          </div>
+
+          <div class="solo-paleo" id="camposPaleo">
+            <div class="campo">
+              <label for="regInstitucion">Institución <span class="req">*</span></label>
+              <input id="regInstitucion" name="institucion" maxlength="120" placeholder="Universidad / Museo">
+              <div class="error-msg"></div>
+            </div>
+            <div class="campo">
+              <label for="regEspecialidad">Especialidad <span class="req">*</span></label>
+              <input id="regEspecialidad" name="especialidad" maxlength="120" placeholder="Terópodos del Cretácico">
+              <div class="error-msg"></div>
+            </div>
+            <div class="campo">
+              <label for="regCodigo">Código de acreditación <span class="req">*</span></label>
+              <input id="regCodigo" name="codigoAcreditacion" maxlength="40" placeholder="Proporcionado por la administración">
+              <span class="ayuda">Código de demostración: <code>PALEO-2026</code></span>
+              <div class="error-msg"></div>
+            </div>
+          </div>
+
+          <button class="btn btn-solido" type="submit">Crear cuenta</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/musica.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/acceso.js"></script>
+  <script src="js/asistente.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DinoGlosario · Glosario de dinosaurios</title>
+  <meta name="description" content="Glosario de dinosaurios descubiertos, curado por paleontólogos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <nav class="nav"></nav>
+
+  <header class="hero">
+    <div class="hero-bg" data-parallax="0.25"></div>
+    <svg class="hero-montanas" data-parallax="0.12" viewBox="0 0 1440 320" preserveAspectRatio="none" aria-hidden="true">
+      <path fill="#0f2219" d="M0 220 L120 170 L240 210 L380 120 L520 200 L660 140 L800 210 L960 110 L1100 190 L1240 140 L1440 200 V320 H0Z"/>
+      <path fill="#0b1712" d="M0 260 L160 220 L300 250 L460 200 L620 255 L780 215 L940 260 L1120 210 L1280 250 L1440 230 V320 H0Z"/>
+      <path fill="#090c0a" d="M0 300 Q360 270 720 295 T1440 285 V320 H0Z"/>
+    </svg>
+    <div class="contenedor">
+      <span class="eyebrow revelar">Archivo paleontológico</span>
+      <h1 class="revelar" style="--retraso:.1s">El glosario de los <span class="texto-gradiente">gigantes</span></h1>
+      <p class="lead revelar" style="--retraso:.2s">
+        Explora los dinosaurios descubiertos, sus características, medidas y fotografías de referencia,
+        documentados por paleontólogos acreditados.
+      </p>
+      <div class="acciones revelar" style="--retraso:.3s">
+        <a href="#glosario" class="btn btn-solido">Explorar el glosario</a>
+        <a href="./acceso.html" class="btn" id="ctaAcceso">Soy paleontólogo</a>
+      </div>
+      <div class="estadisticas revelar" style="--retraso:.45s">
+        <div class="estadistica"><strong id="statTotal">—</strong><span>Especies</span></div>
+        <div class="estadistica"><strong>11</strong><span>Grupos</span></div>
+        <div class="estadistica"><strong>165</strong><span>Millones de años</span></div>
+      </div>
+    </div>
+    <a href="#glosario" class="scroll-indicador" aria-label="Bajar"></a>
+  </header>
+
+  <main>
+    <section class="seccion seccion-recs" id="paraTi" hidden>
+      <div class="contenedor">
+        <div class="seccion-cabecera">
+          <div class="revelar izq">
+            <span class="eyebrow" id="recsEyebrow">Elegidos para ti</span>
+            <h2 id="recsTitulo">Tu próxima expedición</h2>
+          </div>
+          <div class="revelar der">
+            <p id="recsTexto">Aprendemos de lo que exploras para sugerirte dinosaurios afines.</p>
+            <div class="intereses" id="recsIntereses"></div>
+          </div>
+        </div>
+        <div class="recs" id="recsInicio"></div>
+      </div>
+    </section>
+
+    <section class="seccion" id="glosario">
+      <div class="contenedor">
+        <div class="seccion-cabecera">
+          <div class="revelar izq">
+            <span class="eyebrow">Colección</span>
+            <h2>Dinosaurios descubiertos</h2>
+          </div>
+          <p class="revelar der">Busca por nombre común, nombre científico o región. Filtra por periodo geológico y dieta.</p>
+        </div>
+
+        <form class="filtros revelar" id="filtros" role="search">
+          <input type="search" name="q" placeholder="Buscar: rex, Mongolia, Brachiosaurus…" aria-label="Buscar">
+          <select name="periodo" aria-label="Periodo"><option value="">Todos los periodos</option></select>
+          <select name="dieta" aria-label="Dieta"><option value="">Todas las dietas</option></select>
+          <select name="grupo" aria-label="Grupo"><option value="">Todos los grupos</option></select>
+        </form>
+
+        <div class="grid-dinos" id="grid"></div>
+      </div>
+    </section>
+
+    <div class="divisor"></div>
+
+    <section class="seccion" id="sabias">
+      <div class="contenedor">
+        <div class="sabias revelar">
+          <span class="eyebrow">¿Sabías que…?</span>
+          <blockquote id="sabiasTexto">Los dinosaurios dominaron la Tierra durante más de 165 millones de años.</blockquote>
+          <div class="sabias-pie"><a id="sabiasEnlace" href="#glosario">Explorar el glosario →</a>
+            <button type="button" class="btn btn-sm" id="sabiasOtra">Otra curiosidad ↻</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="seccion" id="eras">
+      <div class="contenedor">
+        <div class="seccion-cabecera">
+          <div class="revelar izq">
+            <span class="eyebrow">Mesozoico</span>
+            <h2>La era de los dinosaurios</h2>
+          </div>
+          <p class="revelar der">Durante más de 165 millones de años, los dinosaurios dominaron los ecosistemas terrestres en tres grandes periodos.</p>
+        </div>
+        <div class="eras">
+          <div class="era revelar" style="--retraso:0s">
+            <div class="punto">I</div>
+            <h3>Triásico</h3>
+            <div class="rango">252 – 201 Ma</div>
+            <p>Aparecen los primeros dinosaurios, pequeños y ágiles, en el supercontinente Pangea.</p>
+          </div>
+          <div class="era revelar" style="--retraso:.15s">
+            <div class="punto">II</div>
+            <h3>Jurásico</h3>
+            <div class="rango">201 – 145 Ma</div>
+            <p>La edad de los grandes saurópodos como el Braquiosaurio y depredadores como el Alosaurio.</p>
+          </div>
+          <div class="era revelar" style="--retraso:.3s">
+            <div class="punto">III</div>
+            <h3>Cretácico</h3>
+            <div class="rango">145 – 66 Ma</div>
+            <p>Florecen el Tiranosaurio y el Tricerátops, hasta la extinción masiva causada por un asteroide.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="contenedor">
+      <span>© 2026 DinoGlosario · Hecho con fósiles y café · <a href="/?test">Repetir el test de gustos</a></span>
+      <span>Imágenes: Wikipedia / Wikimedia Commons · Spring Boot · PostgreSQL · OpenAI</span>
+    </div>
+  </footer>
+
+  <script src="js/musica.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/intro.js"></script>
+  <script src="js/sonidos.js"></script>
+  <script src="js/glosario.js"></script>
+  <script src="js/asistente.js"></script>
+</body>
+</html>

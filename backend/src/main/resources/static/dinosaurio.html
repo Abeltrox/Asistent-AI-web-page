@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dinosaurio · DinoGlosario</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+  <!-- Three.js para el visor 3D (se carga solo al llegar al modelo) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <nav class="nav"></nav>
+  <main id="contenido">
+    <div class="acceso"><div class="escribiendo"><span></span><span></span><span></span></div></div>
+  </main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+    <button class="btn btn-sm" type="button" id="cerrarLightbox">Cerrar ✕</button>
+    <div><img alt=""><p></p></div>
+  </div>
+
+  <footer>
+    <div class="contenedor">
+      <span>© 2026 DinoGlosario · Imágenes y resúmenes: Wikipedia / Wikimedia Commons</span>
+      <a href="/#glosario">← Volver al glosario</a>
+    </div>
+  </footer>
+
+  <script src="js/musica.js"></script>
+  <script src="js/comun.js"></script>
+  <script src="js/sonidos.js"></script>
+  <script src="js/detalle.js"></script>
+  <script src="js/asistente.js"></script>
+</body>
+</html>
